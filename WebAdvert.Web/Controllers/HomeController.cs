@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAdvert.Web.Models;
+//using AutoMapper;
 
 namespace WebAdvert.Web.Controllers
 {
@@ -20,8 +21,13 @@ namespace WebAdvert.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        [ResponseCache(Duration = 60)]
+        public async Task<IActionResult> Index()
         {
+            //var allAds = await ApiClient.GetAllAsync().ConfigureAwait(false);
+            //var allViewModels = allAds.Select(x => Mapper.Map<IndexViewModel>(x));
+
+            //return View(allViewModels);
             return View();
         }
 
