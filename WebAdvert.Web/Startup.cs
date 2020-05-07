@@ -14,6 +14,9 @@ using Polly;
 using Polly.Extensions.Http;
 using System.Net.Http;
 using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebAdvert.Web
 {
@@ -29,8 +32,17 @@ namespace WebAdvert.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.AddControllersWithViews();
-            services.AddCognitoIdentity(config => {
+
+            services.AddCognitoIdentity(config =>
+            {
                 config.Password = new Microsoft.AspNetCore.Identity.PasswordOptions
                 {
                     RequireDigit = false,
@@ -45,6 +57,8 @@ namespace WebAdvert.Web
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Accounts/Login";
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);               
+                options.SlidingExpiration = true;
             });
 
             services.AddTransient<IFileUploader, S3FileUploader>();
@@ -80,7 +94,7 @@ namespace WebAdvert.Web
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-
+            app.UseCookiePolicy();
             app.UseRouting();
 
             app.UseAuthorization();

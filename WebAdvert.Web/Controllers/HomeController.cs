@@ -22,19 +22,14 @@ namespace WebAdvert.Web.Controllers
 
         [Authorize]
         [ResponseCache(Duration = 60)]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             //var allAds = await ApiClient.GetAllAsync().ConfigureAwait(false);
             //var allViewModels = allAds.Select(x => Mapper.Map<IndexViewModel>(x));
 
             //return View(allViewModels);
             return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        }        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
